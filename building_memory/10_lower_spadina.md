@@ -62,3 +62,10 @@ Sugar Wharf (95 Lake Shore E, 2023 — different micro-market) · Lighthouse / A
   recommendation mirror + /10 scores, future-proofed Low/High ranges. Recommended subject $/SF ≈
   **$4.98** (Concord+10%); ALL CONDOS $4.38/SF. Browser deepening worklist outstanding (see
   `10_Lower_Spadina_Comps_Verification.md`).
+- 2026-06-16 (Round 2, same day) — Per user review: **C4 subject premium now DERIVED** (live
+  `=C58/C59-1` = newest Concord ÷ all-comp blend − 1 ≈ **+3.4%**, replacing the typed 10%) → recommended
+  subject $/SF **$4.98 → $4.68**; **C3 apartment premium → 0** (derive only when apartment comps exist).
+  **Subject & Conclusion sheet deleted** (6 sheets now); Output decluttered (removed recommendation
+  mirror, /10 scores, Other-Excluded block — excluded log lives here + in the verification md). SF & $
+  now 0-dp display; Date Scraped stored as clean text. Floor-Plans pull + bracket-only SF validation
+  still outstanding (browser run). 1,160 formulas, 0 errors.

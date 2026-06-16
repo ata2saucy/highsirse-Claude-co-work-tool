@@ -32,6 +32,38 @@ recomputes on open.
 
 ---
 
+## Round 2 revisions (2026-06-16, same day — additive)
+
+User review of the run output drove a second pass. **No comp lease/SF number changed**; the only
+modelling change is that the subject premium is now *derived*, which intentionally moves the
+recommendation. Changes:
+
+1. **Premiums now derived, not guesses.**
+   - **C4 (subject rental premium)** is now the live formula **`=C58/C59-1`** = newest comp (Concord
+     2025) avg $/SF ÷ all-comp blend − 1 = the **observed vintage premium ≈ +3.4%** (was a typed
+     "proposed 10%"). To use a different premium, edit this one cell.
+   - **C3 (apartment premium)** set to **0** with a note to derive it (condo $/SF ÷ comparable-age
+     apartment $/SF − 1) only when apartment comps are added. No apartment comps here.
+   - **Consequence:** recommended subject $/SF moves **$4.98 → $4.68** (Concord basis, C34) and
+     **$4.83 → $4.54** (all-comp basis, C35); Output's Subject Site / Subject Property Rent rows
+     drop in step. This is the data-derived (conservative) read the user requested.
+2. **Subject & Conclusion sheet deleted** — its content was a pure presentation layer (all formulas
+   pulled from Data_Summary); the recommendation still lives in Data_Summary (C34) and Output's
+   native Subject-Site / Subject-Property-Rent rows. Workbook now **6 sheets**.
+3. **Output decluttered** — removed the round-1 bolt-ons (recommendation mirror, comp-quality /10
+   scores) **and** the "Other Excluded / Evaluated & excluded" block. The excluded-buildings log is
+   preserved here and in building memory, so nothing is lost.
+4. **Formatting** — square footage and dollar rents now display **0 decimal places** (e.g. 799 sq ft,
+   $3,040); $/SF rates keep 2 dp; premiums/mix show %.
+5. **Date Scraped (AO)** now stored as clean text `2026-06-16`, consistent with the Lease Date column.
+6. **Deferred to a browser-enabled run:** Floor Plans population from vipcondos (match the Hickory
+   mock format) and Route-A validation of the bracket-only SF (Quartz/Spectra, The Well small suites).
+
+Re-verified: **1,160 formulas, 0 errors** (static scan), numpy tie-out matches (new C4 = 3.4%,
+C34 = $4.68); 0 leading-operator labels; no dangling reference to the deleted sheet.
+
+---
+
 ## What changed in this pass (structural / format — no data changes)
 
 1. **`Date Scraped` column added at AO** on both `RD Condos` and `RD Apartments`; populated
