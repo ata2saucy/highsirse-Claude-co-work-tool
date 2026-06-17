@@ -147,6 +147,46 @@ PH-14 · 3/2 · 1pk · 1,069 · $5,500 · 2026-06-12 · C13099798 — 1909 · 1+
    top block and extend the LINEST helper `J:N` + `C2` range to the new last verified row (never
    include blank-SF rows). Extend nothing else — Output Low/High already reach row 120.
 
+## v3 output cleanup (2026-06-17) — `tool-v3-output-cleanup` (append-only; no comp data changed)
+
+Structural/format pass bringing the workbook to the six-sheet v3 standard. **No number was
+re-pulled and no verified figure changed** — the 39 verified-SF comps + 10 SF-ceiling context rows
+are exactly as recorded above; every reported number still traces to the condos.ca pages logged in
+this file. What changed in the workbook:
+
+- **`Subject & Conclusion` sheet deleted.** Its recommendation summary (TLDR $/SF, recommended rent
+  by suite type, custom suite-size input, source bridge, TRREB context, confidence legend, notes)
+  is **folded into the Output tab**. Final structure = six sheets: Output · Building Summary ·
+  Data_Summary · RD Condos · RD Apartments · Floor Plans.
+- **Output `/10` comp-quality score table removed.** Comp roles are now prose only (the "Other
+  Excluded" block); no numeric judgment score appears anywhere. Output relabelled `RECOMMENDATION`
+  (dropped the "mirror of Subject & Conclusion" wording).
+- **Data_Summary `INPUTS` block deleted**; PREMIUM BASIS + MIX BASIS kept (relocated, refs fixed),
+  plus an APARTMENT PREMIUM BASIS note. A note-cell that began with `=` (and so parsed as a broken
+  formula) was removed with the block.
+- **Formula hardening (the reported #REF!/#VALUE! risks):** parking `C2` is now a guarded live
+  LINEST (`IFERROR(IF(enough rows AND parking varies, INDEX(LINEST…),0),0)`) — still **$26.05/spot/mo**
+  here, and it fails cleanly to `0 — insufficient parking variation` if a future set lacks variation;
+  subject mix `H2:H4` derive with an `IFERROR` manual fallback (**63 / 30 / 7**, clean %); the
+  weighted comp $/SF renormalises over present bed buckets (never `#VALUE!`); apartment premium
+  `C3 = 0` with `Unused — no apartment comps in selected set`; subject premium `C4 = 10%` carries a
+  judgment/anchored-to-PREMIUM-BASIS note (not asserted as fact, flagged for user confirmation).
+- **RD sheets:** added the four SF-validation columns — **SF Verification Status · SF Source Type ·
+  SF Source / URL · SF Explanation** (AP:AS) — so every row states its SF basis; the 39 verified
+  rows = "Verified registered area / condos.ca registered area", the 10 SF-ceiling rows = "Bracket
+  only" with the exclusion reason and `Include=0`. Date / Lease Date / Date Scraped display
+  `yyyy-mm-dd`; SF and counts are whole numbers, `$/SF` 2 decimals. RD Condos and RD Apartments are
+  structurally identical (45 cols A:AS); RD Apartments carries the clean empty-set note.
+- **Floor Plans** rebuilt to the 18-column session log (Subject/Comp · Source Site · Source URL ·
+  Date Read · Floor Band · Stack/Line · Balcony/Terrace · Notes · Used For · Verification Tier). The
+  subject "no plans published" row is kept; **no comp plan rows were invented** — comp SF came from
+  condos.ca registered areas (Route B), so a NOTE row records that no VIPcondos plans were opened.
+
+**Verification:** `tools/qa_workbook.py` — 22/22 checks pass, **0 visible error cells** on recalc;
+numpy cross-checks reconcile (parking $26.05; weighted Concord $/SF $4.524 → +10% → recommended
+**$4.977**; all-comp $4.388 → $4.826). `fullCalcOnLoad` set so Excel recomputes on open. The
+browser deepening worklist below is unchanged and still outstanding.
+
 ## Data ceiling / definitive source
 condos.ca per-unit figures are calculated registered areas (precise for modern TSCC corps; bracket
 -only for some buildings — Quartz/Spectra, The Well small suites). Leased history is login-gated

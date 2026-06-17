@@ -53,7 +53,9 @@ the primary comp evidence (C4 = 0). Only ask (1)/(3) cold if Step 0 was inconclu
 which answer you used.
 The **remaining per-subject levers** are gathered once (when building the workbook), not as part
 of this up-front ask: suite count/storeys, TRREB district, date filter, subject rental premium,
-apartment premium, primary-market group label — they live as yellow levers. The unit-mix weights
+apartment premium, primary-market group label — they live as yellow levers (the subject and
+apartment premiums stay tunable but are **anchored to their live basis blocks** — PREMIUM BASIS /
+APARTMENT PREMIUM BASIS, see the Deliverable section — never bare guesses). The unit-mix weights
 are **not** asked again here: they come from question (2) above (a user-provided mix), else are
 derived live from the Floor Plans `(SUBJECT)` rows when the subject has its own plans, else
 entered as the subject's planned mix with an in-cell source (never a free-typed constant).
@@ -105,17 +107,19 @@ Run this before any per-unit work whenever the comp set isn't already user-confi
 3. **STOP — present the ranked shortlist**, one row per candidate building, each showing:
    **building name · a brief one-line description of the development** — *what it is* (year built
    or expected year built, product type, storeys/units, anything distinctive) **· location**
-   (address + neighbourhood and distance from the subject) **· a comp-quality rating out of 10**
-   (Claude's judgment of how good a comp it is, 10 = ideal, with a one-line *why* — *how it
-   compares to the subject*: year-built delta, product match/mismatch, distance, rental depth;
-   labelled as judgment, never overrides the user) **· year built · product · rental depth ·
-   proposed role** — **plus every evaluated-and-excluded building with its reason**
-   (a low /10 score is a valid way to express exclusion). Then **wait for the user to pick.
-   Pulling per-unit comps before the user confirms the set is a process violation.** The user's
-   list wins over the ranking and the scores.
+   (address + neighbourhood and distance from the subject) **· a one-line *why* it does or doesn't
+   compare** (year-built delta, product match/mismatch, distance, rental depth — **prose only, no
+   /10 comp-quality score; the numeric rating was removed 2026-06-16**; judgment, never overrides
+   the user) **· year built · product · rental depth · proposed role** (a *grouping for the user
+   to confirm* — it drives the Output Group 1 vs Group 2 layout, not a score) — **plus every
+   evaluated-and-excluded building with its reason** (state it in words). Then **wait for the user
+   to pick. Pulling per-unit comps before the user confirms the set is a process violation.** The
+   user's list wins over the ranking.
 4. Run the per-unit process **only on selected buildings**.
 5. **Apartment premium:** when a comp is a purpose-built apartment and the subject is a condo,
-   gross its $/SF **up** by a documented, tunable premium (~10%, lever C3; reverse the sign if
+   gross its $/SF **up** by a documented, tunable premium **anchored to the live APARTMENT PREMIUM
+   BASIS block** (lever C3 — derived from the condo-vs-apartment $/SF pairing when both product
+   types are in the set, else a named external source; never a bare guess; reverse the sign if
    the subject is an apartment). Assumption cell, never buried in a formula.
 6. **Document the shortlist AND the rejects** — "evaluated and excluded" is a required
    outcome, logged by name in the workbook's Output → Other Excluded.
@@ -264,26 +268,39 @@ workbook's dated source notes, e.g. `user-provided {date}`, `TRREB Q1-2026`.)
 ## Deliverable — the v2 comp workbook
 
 `{Building} Rental Comps _vACTIVE.xlsx`, matching **`v2 hickory mock comp.xlsx` cell-for-cell**
-— sheets, blocks, row/column positions and labels. Sheets: **Output** (grouped comp
-blocks → PBR premium → Implied Untrended Rent → Subject Site; unit-mix table with Low/High,
-premium rows, building totals; regression block; TRREB quarter table) — **two product-type views,
-condos-only and apartments-only, each rolling up its own Raw Data sheet and each showing the
-asking-vs-leased ("selling as vs sold for") gap** · **Subject &
-Conclusion** (TLDR banner, recommended $/SF, rent by suite type, custom suite-size input,
-prior-model bridge, confidence legend) · **Building Summary** · **Data_Summary** (yellow
+— sheets, blocks, row/column positions and labels (the mock predates the 2026-06-16 changes
+flagged below — build to **this** spec wherever they differ). **Six sheets:** **Output** (grouped
+comp blocks → PBR premium → Implied Untrended Rent → Subject Site; unit-mix table with Low/High,
+premium rows, building totals; regression block; TRREB quarter table; **plus the recommended-rent
+summary folded in from the former Subject & Conclusion sheet — green TLDR banner, recommended
+$/SF = `Data_Summary!C25`, rent by suite type, custom suite-size input, prior-model bridge,
+confidence legend**) — **two product-type views, condos-only and apartments-only, each rolling up
+its own Raw Data sheet and each showing the asking-vs-leased ("selling as vs sold for") gap** ·
+**Building Summary** · **Data_Summary** (yellow
 levers C1/C3/C4 + suite-size; **C2 parking adjustment is a LIVE LINEST regression over the
 leased rows — derived, never typed — a single coefficient shared by both `RD Condos` and `RD
 Apartments` (both sheets' col D reference C2; see CLAUDE.md → "Apartment vs condo handling")**;
+**C3 and C4 are derived, not guessed — anchored to the live PREMIUM BASIS (C4, vintage $/SF
+spread) and APARTMENT PREMIUM BASIS (C3, condo-vs-apartment $/SF pairing, else a named external
+source) blocks and sitting within the observed range; the old consolidated INPUTS table is
+removed — PREMIUM BASIS / APARTMENT PREMIUM BASIS / MIX BASIS are kept**;
 **H2:H4 unit-mix weights are likewise derived — a
 Subject Unit-Mix Derivation block (P1:Q11) COUNTIFs the Floor Plans `(SUBJECT)` rows by bed
 bucket (studios→1BR) and `H2 =IF(Q5>0,Q2/Q5,Q8)`; pre-construction subjects with no plans
 fall back to the manual sourced mix in Q8:Q10, which must name its source in Q7**) · **RD Condos**
-and **RD Apartments** (RD = Raw Data; two identical sheets, 40 columns A:AN, live per-row
+and **RD Apartments** (RD = Raw Data; two identical sheets, **45 columns A:AS** — 40 core A:AN +
+Date Scraped (AO) + four SF-validation columns (AP SF Verification Status · AQ SF Source Type ·
+AR SF Source/URL · AS SF Explanation) — live per-row
 formulas; **Leased Rent = achieved, Listed Rent = asking**; row
 order: in-window → older → actives → excluded partials; every row carries MLS# where one exists, the listing
-URL opened this session, and a Description of what was seen) · **Floor Plans** (plan
-dictionary). **Raw Data is two identical-structure sheets — `RD Condos` and `RD Apartments`
-— condo rows on one, apartment rows on the other (same 40 columns, same formulas);
+URL opened this session, and a Description of what was seen — **where the SF is not green the
+SF Explanation / Description states how it was obtained and why it isn't validated, else col B is
+blank with Include=0; Date, Lease Date and Date Scraped display as `yyyy-mm-dd`**) · **Floor Plans**
+(18-column session plan log — **every VIPcondos/developer plan opened this session: the subject
+(tagged `(SUBJECT)`) AND every comp building, one row per distinct plan — comprehensive, not a
+sample; if only condos.ca registered areas were used, log a NOTE row and invent no plans**). **Raw
+Data is two identical-structure sheets — `RD Condos` and `RD Apartments`
+— condo rows on one, apartment rows on the other (same 45 columns, same formulas);
 condos and apartments are never blended.** Full cell-level spec: `CLAUDE.md` → "Output format"
 and "Apartment vs condo handling". All Hickory-specific values
 are the worked example's parameters — substitute the current subject's.
@@ -291,9 +308,14 @@ are the worked example's parameters — substitute the current subject's.
 **Conventions:** font colour — **blue = hard-coded input · black = formula/label**; **yellow
 fill = tunable lever**. **No bare constants:** every blue hard-coded cell must show its origin
 in an adjacent note — a live derivation, or an explicit source (external read "TRREB Q1-2026
-p.3", judgment "user 2026-06-12", subject parameter "developer suite schedule"). If a value is
-computable from data already in the workbook (e.g. the unit mix from the Floor Plans
-`(SUBJECT)` rows), make it a live formula, not a typed number (cf. C2 LINEST, H2:H4). Raw Data
+p.3", subject parameter "developer suite schedule"); **a premium lever (C3/C4) names its
+quantitative basis — the live PREMIUM BASIS / APARTMENT PREMIUM BASIS block it sits within, not
+a date or "user judgment" alone**. If a value is computable from data already in the workbook
+(e.g. the unit mix from the Floor Plans `(SUBJECT)` rows, or a premium from a comp-set spread),
+make it a live formula, not a typed number (cf. C2 LINEST, H2:H4, PREMIUM BASIS). **Number
+formats:** square-footage and suite-size use **`#,##0`** (whole number, thousands separator, no
+decimals — `1,234`, never `1,234.2385`); rents use **`#,##0`**; `$/SF` keeps its decimals
+(e.g. `4.514`); premiums and shares keep `%`. Raw Data
 confidence fills — **green** = leased in-window + SF verified
 per-unit · **cream** = active/asking, pre-filter lease, or minor caveat · **orange** =
 excluded partials. **Verify before delivering:** recalc to zero errors (toolchain has no

@@ -1,0 +1,12 @@
+# Office / Excel temp & lock files
+~$*
+*.tmp
+
+# OS cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Python QA tooling artifacts
+__pycache__/
+*.pyc

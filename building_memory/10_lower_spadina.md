@@ -62,3 +62,17 @@ Sugar Wharf (95 Lake Shore E, 2023 — different micro-market) · Lighthouse / A
   recommendation mirror + /10 scores, future-proofed Low/High ranges. Recommended subject $/SF ≈
   **$4.98** (Concord+10%); ALL CONDOS $4.38/SF. Browser deepening worklist outstanding (see
   `10_Lower_Spadina_Comps_Verification.md`).
+- 2026-06-17 — **v3 output cleanup** (`tool-v3-output-cleanup`; no comp data changed, no number
+  re-pulled). Workbook brought to the six-sheet v3 standard: **deleted `Subject & Conclusion`**
+  (its recommendation summary folded into the Output tab); **removed the Output `/10` comp-quality
+  score table** (comp roles stay as prose in the Output → "Other Excluded" block, no numbers);
+  **deleted the Data_Summary INPUTS block** (PREMIUM BASIS / MIX BASIS
+  kept, + an APARTMENT PREMIUM BASIS note). Hardened formulas: parking C2 is a guarded live LINEST
+  (still **$26.05/spot/mo**, falls to 0 + reason if parking has no variation); subject mix H2:H4
+  derive with a clean manual fallback (63/30/7); weighted $/SF renormalises present buckets (no
+  more #VALUE!); apartment premium C3 = 0 with "Unused — no apartment comps in selected set".
+  Added the four SF-validation columns (AP:AS) on both RD sheets; all dates display `yyyy-mm-dd`;
+  SF/counts whole-number. Recalc = **0 errors** (`tools/qa_workbook.py` all-pass); headline numbers
+  unchanged — recommended subject $/SF **$4.977**, all-comp $4.388. The /10 roles in the comp-set
+  table above are retained only as the historical 2026-06-16 record. **Browser deepening worklist
+  still outstanding** (deepen thin buildings; Quartz/Spectra Route A).
